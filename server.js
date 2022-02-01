@@ -97,7 +97,7 @@ passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedi
   });
 
   app.get("/getuser", (req, res) => {
-    res.send("test",req.user);
+    res.send("test");
   })
 
 
