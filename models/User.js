@@ -3,9 +3,10 @@ const { Schema } = mongoose;
 
 
 user = new Schema ({
-    name: String,
+    username: String,
     TwitterId: String,
-    CampaignNFTId: String,
+    CampaignId: String,
+    profileCreated: Date,
     endDate: Date
 })
 
