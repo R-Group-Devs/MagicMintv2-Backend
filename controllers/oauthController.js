@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const serverless = require('serverless-http');
 
-const oauthCallback="https://localhost:3001";
+const oauthCallback="http://localhost:3001";
 const CONSUMER_KEY = process.env.CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.CONSUMER_SECRET;
 const oauth = require('../lib/oauth-promise')(oauthCallback);
@@ -30,17 +30,36 @@ let tokens = {}
 
 exports.requestToken = async (req, res) =>  {
 
-    const {oauth_token, oauth_token_secret} = await oauth.getOAuthRequestToken();
+    console.log("here")
+
   
-    res.cookie(COOKIE_NAME, oauth_token , {
-      maxAge: 15 * 60 * 1000, // 15 minutes
-      secure: true,
-      httpOnly: true,
-      sameSite: true,
-    });
+  
+    async function getOAuthRequestToken(){ 
+        return new Promise((resolve, reject) => {
+          _oauth.getOAuthRequestToken((error, oauth_token, oauth_token_secret, results) => {
+            if(error) {
+              reject(error);  
+            } else {
+              resolve({oauth_token, oauth_token_secret, results});  
+            }
+          });
+        });
+      }
+
+    const test= await getOAuthRequestToken();
+
+    console.log(test)
+    // const {oauth_token, oauth_token_secret} = await getOAuthRequestToken();
+  
+    // res.cookie(COOKIE_NAME, oauth_token , {
+    //   maxAge: 15 * 60 * 1000, // 15 minutes
+    //   secure: true,
+    //   httpOnly: true,
+    //   sameSite: true,
+    // });
     
-    tokens[oauth_token] = { oauth_token_secret };
-    res.json({ oauth_token });
+    // tokens[oauth_token] = { oauth_token_secret };
+    // res.json({ oauth_token });
     
   };
 
