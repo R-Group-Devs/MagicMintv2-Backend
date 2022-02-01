@@ -16,7 +16,6 @@ let User = require('./models/User')
 const TWITTER_CONSUMER_KEY = process.env.CONSUMER_KEY;
 const TWITTER_CONSUMER_SECRET = process.env.CONSUMER_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL;
-console.log(FRONTEND_URL)
 const CALLBACK_URL = process.env.CALLBACK_URL;
 const SUCCESS_REDIRECT = process.env.SUCCESS_REDIRECT;
 const FAILURE_REDIRECT = process.env.FAILURE_REDIRECT;
@@ -37,12 +36,6 @@ connectDatabase()
 
 //middleware
 app.use(express.json());
-// app.use(function(req, res, next){
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header('Access-Control-Allow-Methods','GET,PUT,POST,DELETE');
-//     res.header("Access-Control-Allow-Headers", "Authorization, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
 app.use(cors({ origin: FRONTEND_URL, 
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true // allow session cookie from browser to pass through
@@ -104,7 +97,7 @@ passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedi
   });
 
   app.get("/getuser", (req, res) => {
-    res.send(req.user);
+    res.send("test",req.user);
   })
 
 
