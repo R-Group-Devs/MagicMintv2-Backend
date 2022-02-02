@@ -49,15 +49,12 @@ app.use(
       cookie: { secure: false },
       saveUninitialized: true,
   }));
-
   
 
 app.use(passport.initialize())
 app.use(passport.session())
 
 passport.serializeUser((user, done) => {
-  console.log('serializeUser: ', user)
-
     return done(null, user)
 })
 
@@ -79,7 +76,6 @@ const twitterAuth = new TwitterStrategy({
         profileCreated: new Date()
       })  
       const saved = await newUser.save()
-      console.log("saved",saved)
     }
  
 
@@ -95,8 +91,7 @@ app.get('/auth/twitter/callback',
 passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedirect: FAILURE_REDIRECT }),
   function (req, res) {
     // Successful authentication, redirect home.
-    console.log(res)
-    res.send("Text")
+    console.log("response",res)
     res.redirect('/');
   });
 
