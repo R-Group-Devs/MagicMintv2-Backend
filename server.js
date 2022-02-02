@@ -37,25 +37,28 @@ connectDatabase()
 //middleware
 app.use(express.json());
 app.use(cors({ origin: FRONTEND_URL, 
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true // allow session cookie from browser to pass through
 }));
 
 
 app.use(
     session({
-      secret: "keyboard cat",
+      secret: "secretcode",
       resave: true,
       key: 'sid',
       cookie: { secure: false },
       saveUninitialized: true,
   }));
+
+app.use(cookieParser('secretcode'))
   
 
 app.use(passport.initialize())
 app.use(passport.session())
 
 passport.serializeUser((user, done) => {
+  console.log('serializeUser: ', user)
+
     return done(null, user)
 })
 
@@ -95,7 +98,7 @@ passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedi
     // Successful authentication, redirect home.
     console.log(res)
     res.send("Text")
-    // res.redirect('/');
+    res.redirect('/welcome');
   });
 
   app.get("/getuser", (req, res) => {
