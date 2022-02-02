@@ -40,14 +40,14 @@ app.use(cors({ origin: FRONTEND_URL,
     credentials: true // allow session cookie from browser to pass through
 }));
 
+app.set('trust proxy', 1)
 
 app.use(
     session({
       secret: "secretcode",
       resave: true,
       key: 'sid',
-      httpOnly: false,
-      cookie: { secure: true, },
+      cookie: { secure: false, proxy: true},
       saveUninitialized: true,
   }));
   
@@ -63,8 +63,8 @@ passport.deserializeUser((user, done) => {
     return done(null, user)
 })
 const twitterAuth = new TwitterStrategy({
-    consumerKey: "uyEdgOEe2t0XDvoHamaJB7sUH",
-    consumerSecret: "uW8l7esdmhqgDEORl84XRwfacTgyVkTNxW6LxhEQLeXL7tdKt7",
+    consumerKey: TWITTER_CONSUMER_KEY,
+    consumerSecret: TWITTER_CONSUMER_SECRET,
     callbackURL: CALLBACK_URL,
 }, async (req, accessToken, refreshToken, profile, cb) => {
 
@@ -92,7 +92,7 @@ app.get('/auth/twitter/callback',
 passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedirect: FAILURE_REDIRECT }),
   function (req, res) {
     // Successful authentication, redirect home.
-    console.log("response",res)
+    console.log(res)
     res.redirect('/');
   });
 
