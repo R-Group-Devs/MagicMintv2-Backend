@@ -1,8 +1,6 @@
 const express  = require('express');
 const mongoose = require('mongoose');
 const { MongoDB_URI } = require('./config')
-const cookieParser = require('cookie-parser');
-const serverless = require('serverless-http');
 const cors = require('cors');
 const session = require('express-session')
 const passport = require('passport')
@@ -58,6 +56,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 passport.serializeUser((user, done) => {
+    console.log("serialize user", user)
     return done(null, user)
 })
 
