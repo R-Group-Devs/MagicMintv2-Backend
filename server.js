@@ -46,7 +46,8 @@ app.use(
       secret: "secretcode",
       resave: true,
       key: 'sid',
-      cookie: { secure: false },
+      httpOnly: false,
+      cookie: { secure: true, },
       saveUninitialized: true,
   }));
   
