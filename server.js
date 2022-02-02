@@ -98,7 +98,7 @@ passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedi
     // Successful authentication, redirect home.
     console.log(res)
     res.send("Text")
-    res.redirect('/welcome');
+    res.redirect('/');
   });
 
   app.get("/getuser", (req, res) => {
