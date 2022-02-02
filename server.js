@@ -40,21 +40,16 @@ app.use(cors({ origin: FRONTEND_URL,
     credentials: true // allow session cookie from browser to pass through
 }));
 
-app.set("trust proxy", 1)
 
 app.use(
     session({
       secret: "secretcode",
       resave: true,
+      key: 'sid',
+      cookie: { secure: false },
       saveUninitialized: true,
-      cookie: { 
-        sameSite: 'none',
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 60
-      },
   }));
 
-app.use(cookieParser('secretcode'))
   
 
 app.use(passport.initialize())
@@ -88,10 +83,10 @@ const twitterAuth = new TwitterStrategy({
     }
  
 
- 
     return cb(null, profile)
 
   })
+
 passport.use(twitterAuth);
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
