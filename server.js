@@ -47,7 +47,7 @@ app.use(
       secret: "secretcode",
       resave: true,
       key: 'sid',
-      cookie: { secure: false, proxy: true},
+      cookie: { secure: true, proxy: true},
       saveUninitialized: true,
   }));
   
@@ -97,6 +97,7 @@ passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedi
   });
 
   app.get("/getuser", (req, res) => {
+    console.log(req.user)
     res.send(req.user);
   })
 
