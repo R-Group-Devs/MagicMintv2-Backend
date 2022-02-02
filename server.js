@@ -63,8 +63,8 @@ passport.deserializeUser((user, done) => {
     return done(null, user)
 })
 const twitterAuth = new TwitterStrategy({
-    consumerKey: TWITTER_CONSUMER_KEY,
-    consumerSecret: TWITTER_CONSUMER_SECRET,
+    consumerKey: "uyEdgOEe2t0XDvoHamaJB7sUH",
+    consumerSecret: "uW8l7esdmhqgDEORl84XRwfacTgyVkTNxW6LxhEQLeXL7tdKt7",
     callbackURL: CALLBACK_URL,
 }, async (req, accessToken, refreshToken, profile, cb) => {
 
