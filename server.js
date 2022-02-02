@@ -44,8 +44,10 @@ app.use(cors({ origin: FRONTEND_URL,
 
 app.use(
     session({
-      secret: "secretcode",
+      secret: "keyboard cat",
       resave: true,
+      key: 'sid',
+      cookie: { secure: false },
       saveUninitialized: true,
   }));
   
