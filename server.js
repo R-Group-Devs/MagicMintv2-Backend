@@ -49,7 +49,7 @@ app.use(
       key: 'sid',
       cookie: { 
         sameSite: 'none',
-        secure: false,
+        secure: true,
         maxAge: 1000 * 60 * 60 * 60
       },
       saveUninitialized: true,
