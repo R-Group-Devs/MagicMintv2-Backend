@@ -38,15 +38,15 @@ app.use(cors({ origin: FRONTEND_URL,
     credentials: true // allow session cookie from browser to pass through
 }));
 
+app.set('trust proxy', 1)
+
 app.use(
     session({
       secret: "secretcode",
       resave: true,
+      proxy: true,
       saveUninitialized: true,
-      cookie: {
-        sameSite: 'none', // lax or strict
-        secure: true,        
-        maxAge: 1000 * 60 * 60 * 24 * 7
+      cookie: {sameSite: 'none', secure: true, proxy: true, maxAge: 1000 * 60 * 60 * 24 * 7
       },
 
   }));
