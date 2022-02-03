@@ -44,6 +44,7 @@ app.use(
     session({
       secret: "secretcode",
       resave: true,
+      proxy: true,
       key: 'sid',
       saveUninitialized: true,
       cookie: {sameSite: 'none', secure: true, proxy: true, maxAge: 1000 * 60 * 60 * 24 * 7
