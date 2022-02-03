@@ -39,7 +39,13 @@ app.use(cors({ origin: FRONTEND_URL,
 }));
 
 // app.set('trust proxy', 1)
-
+app.get('/*', function(req, res, next) {
+  if (req.headers.host.match(/^www\./) != null) {
+    res.redirect("http://" + req.headers.host.slice(4) + req.url, 301);
+  } else {
+    next();
+  }
+});
 app.use(
     session({
       secret: "secretcode",
@@ -54,6 +60,7 @@ app.use(
 
 app.use(passport.initialize())
 app.use(passport.session())
+
 
 passport.serializeUser((user, done) => {
     console.log("serialize user", user)
