@@ -39,6 +39,7 @@ app.use(cors({ origin: FRONTEND_URL,
 }));
 
 app.set('trust proxy', 1)
+app.enable('trust proxy');
 
 app.use(
     session({
