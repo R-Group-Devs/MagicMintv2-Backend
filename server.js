@@ -89,7 +89,7 @@ passport.use(twitterAuth);
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
-app.get('/auth/twitter/callback', 
+app.use('/auth/twitter/callback', 
 passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedirect: FAILURE_REDIRECT }),
   function (req, res) {
     // Successful authentication, redirect home.
