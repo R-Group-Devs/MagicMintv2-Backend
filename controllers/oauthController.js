@@ -28,11 +28,7 @@ const COOKIE_NAME = 'oauth_token';
 
 let tokens = {}
 
-exports.requestToken = async (req, res) =>  {
-
-    console.log("here")
-
-  
+exports.requestToken = async (req, res) =>  {  
   
     async function getOAuthRequestToken(){ 
         return new Promise((resolve, reject) => {
@@ -48,7 +44,6 @@ exports.requestToken = async (req, res) =>  {
 
     const test= await getOAuthRequestToken();
 
-    console.log(test)
     // const {oauth_token, oauth_token_secret} = await getOAuthRequestToken();
   
     // res.cookie(COOKIE_NAME, oauth_token , {

@@ -6,6 +6,10 @@ user = new Schema ({
     username: String,
     TwitterId: String,
     CampaignId: String,
+    createdNFT: { // the ID of the createdNFTs
+        type: Array,
+        default: []
+    },
     profileCreated: Date,
     endDate: Date
 })

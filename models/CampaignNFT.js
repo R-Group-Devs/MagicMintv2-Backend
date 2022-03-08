@@ -3,8 +3,10 @@ const { Schema } = mongoose;
 
 
 campaignNFT = new Schema ({
-    CampaignID: String,
-    IPFSUri: String,
+    creator: String, // creator twitter handle
+    name: String,
+    description: String,
+    file: String,
     isMinted: Boolean
 })
 

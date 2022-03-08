@@ -7,7 +7,10 @@ const passport = require('passport')
 const TwitterStrategy = require('passport-twitter').Strategy;
 let campaign = require('./routes/campaign') 
 let user = require('./routes/user') 
+let claim = require('./routes/claim')
 let oauth = require('./routes/oauth'); 
+const fileUpload = require('express-fileupload');
+
 let User = require('./models/User')
 
 
@@ -28,6 +31,7 @@ async function connectDatabase() {
     app.use('/api', oauth);
     app.use('/api', campaign);
     app.use('/api', user);
+    app.use('/api', claim);
     console.log("Connected to mongoose successfully");
 }
 connectDatabase()
@@ -37,6 +41,8 @@ app.use(express.json());
 app.use(cors({ origin: FRONTEND_URL, 
     credentials: true // allow session cookie from browser to pass through
 }));
+app.use(fileUpload());
+
 
 app.set('trust proxy', 1)
 
@@ -46,8 +52,7 @@ app.use(
       resave: true,
       proxy: true,
       saveUninitialized: true,
-      cookie: {sameSite: 'none', secure: true, proxy: true, maxAge: 1000 * 60 * 60 * 24 * 7
-      },
+      // cookie: {sameSite: 'none', secure: true, proxy: true, maxAge: 1000 * 60 * 60 * 24 * 7 },
 
   }));
   
@@ -57,7 +62,6 @@ app.use(passport.session())
 
 
 passport.serializeUser((user, done) => {
-    console.log("serialize user", user)
     return done(null, user)
 })
 
@@ -70,9 +74,10 @@ const twitterAuth = new TwitterStrategy({
     callbackURL: CALLBACK_URL,
 }, async (req, accessToken, refreshToken, profile, cb) => {
 
-     user =  await User.findOne({ twitterId: profile.id });
+    user =  await User.findOne({ username: profile.username });
+    // it is not refreshing as it should, frontend problem!
 
-    if(!user){
+    if(user == undefined){
       newUser = new User({
         username: profile.username,
         twitterId: profile.id,
@@ -80,10 +85,7 @@ const twitterAuth = new TwitterStrategy({
       })  
       const saved = await newUser.save()
     }
- 
-
     return cb(null, profile)
-
   })
 
 passport.use(twitterAuth);
@@ -91,15 +93,15 @@ passport.use(twitterAuth);
 app.get('/auth/twitter', passport.authenticate('twitter'));
 
 app.use('/auth/twitter/callback', 
-passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT,failureRedirect: FAILURE_REDIRECT }),
+passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT, failureRedirect: FAILURE_REDIRECT }),
   function (req, res) {
     // Successful authentication, redirect home.
-    console.log(res)
+    console.log("callback")
     res.redirect('/');
   });
 
   app.get("/getuser", (req, res) => {
-    console.log(req.user)
+    console.log("get user")
     res.send(req.user);
   })
 
