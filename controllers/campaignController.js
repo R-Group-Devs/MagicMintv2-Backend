@@ -35,11 +35,8 @@ exports.createCampaign = async (req, res) =>  {
     const saved = await newCampaign.save()
     res.send(saved)
 }
-
 exports.uploadNFTFile = async (req, res) => {
-
 }
-
 exports.createNFT = async (req, res) =>  {
 
     if(req.files.file){
@@ -53,7 +50,6 @@ exports.createNFT = async (req, res) =>  {
           file: fileName,
           isMinted: false
       })
-
       await req.files.file.mv(filePathNameNew)
 
       const saved = await campaignNFT.save()
@@ -61,8 +57,6 @@ exports.createNFT = async (req, res) =>  {
       if(saved){
         res.send("OK")
       }
-
-    
     }
 
 
@@ -80,15 +74,11 @@ exports.getNFTPrototypeCreatedByUser = async (req, res) => {
 
 }
 exports.getCampaignById = async (req, res) =>  {
-
 }
 exports.deleteCampaign = async (req, res) =>  {
-
 }
 exports.archieveCampaign = async (req, res) =>  {
-
 }
-
 exports.getAllCampaignsByUser = async (req, res) =>  {
 
     const campaigns = await Campaign.find({creatorTwitterHandle: req.params.handle})

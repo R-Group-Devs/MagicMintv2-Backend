@@ -78,7 +78,10 @@ exports.getAllClaimsByUser = async (req, res) =>  {
                             }
                             
 
-
+                            if(claims){
+                                res.send(claims)
+                    
+                               }
 
                         }
                     }
@@ -89,10 +92,7 @@ exports.getAllClaimsByUser = async (req, res) =>  {
            })
 
 
-           if(claims){
-            res.send(claims)
 
-           }
 
         }
 
@@ -105,7 +105,6 @@ exports.getAllClaimsByUser = async (req, res) =>  {
 exports.getClaims = async (req, res) => {
 
     let claims  = await ClaimNFT.find({}).where("owner").equals(req.params.user).where("isMinted").equals(false)
-
     res.send(claims)
 
 }
