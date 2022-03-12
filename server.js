@@ -38,7 +38,12 @@ connectDatabase()
 
 //middleware
 app.use(express.json());
-app.use(cors({ origin: FRONTEND_URL, 
+app.use(cors({ 
+    origin: [
+      FRONTEND_URL,
+      "https://api.twitter.com"
+    ],
+
     credentials: true // allow session cookie from browser to pass through
 }));
 app.use(fileUpload());
