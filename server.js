@@ -1,3 +1,4 @@
+
 const express  = require('express');
 const mongoose = require('mongoose');
 const { MongoDB_URI } = require('./config')
@@ -75,10 +76,12 @@ app.use(passport.session())
 
 
 passport.serializeUser((user, done) => {
+    console.log("serialize")
     return done(null, user)
 })
 
 passport.deserializeUser((user, done) => {
+  console.log("deserialize")
     return done(null, user)
 })
 const twitterAuth = new TwitterStrategy({
@@ -117,6 +120,7 @@ passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),
     console.log("callback")
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Credentials', 'true')
+    res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
     res.redirect(SUCCESS_REDIRECT);
   });
 
