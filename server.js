@@ -1,3 +1,4 @@
+
 const express  = require('express');
 const mongoose = require('mongoose');
 const { MongoDB_URI } = require('./config')
@@ -105,6 +106,7 @@ passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),
     console.log("callback")
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Credentials', 'true')
+    res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
     res.redirect(SUCCESS_REDIRECT);
   });
 
