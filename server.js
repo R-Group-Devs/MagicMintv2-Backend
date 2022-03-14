@@ -64,10 +64,12 @@ app.use(passport.session())
 
 
 passport.serializeUser((user, done) => {
+    console.log("serialize")
     return done(null, user)
 })
 
 passport.deserializeUser((user, done) => {
+  console.log("deserialize")
     return done(null, user)
 })
 const twitterAuth = new TwitterStrategy({
