@@ -11,7 +11,7 @@ let claim = require('./routes/claim')
 let oauth = require('./routes/oauth'); 
 const fileUpload = require('express-fileupload');
 
-let User = require('./models/User')
+let User = require('./models/User');
 
 
 const TWITTER_CONSUMER_KEY = process.env.CONSUMER_KEY;
@@ -42,6 +42,7 @@ app.use(cors({ origin: FRONTEND_URL,
     credentials: true // allow session cookie from browser to pass through
 }));
 app.use(fileUpload());
+
 
 
 app.set('trust proxy', 1)
@@ -90,14 +91,21 @@ const twitterAuth = new TwitterStrategy({
 
 passport.use(twitterAuth);
 
-app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter', passport.authenticate('twitter'), function(){
+  res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+});
+
+// axios.get('/auth/twitter', {withCredentials: true }, passport.authenticate('twitter'))
 
 app.use('/auth/twitter/callback', 
-passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT, failureRedirect: FAILURE_REDIRECT }),
+passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),
   function (req, res) {
     // Successful authentication, redirect home.
     console.log("callback")
-    res.redirect('/');
+    res.setHeader('Content-Type', 'application/json')
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
+    res.redirect(SUCCESS_REDIRECT);
   });
 
   app.get("/getuser", (req, res) => {
