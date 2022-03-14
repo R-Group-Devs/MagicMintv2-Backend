@@ -94,7 +94,7 @@ const twitterAuth = new TwitterStrategy({
 
 passport.use(twitterAuth);
 
-app.get('/auth/twitter', passport.authenticate('twitter'), function(){
+app.get('/auth/twitter', passport.authenticate('twitter'), function(req, res){
   
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('Access-Control-Allow-Credentials', 'true')
