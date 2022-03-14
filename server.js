@@ -94,7 +94,7 @@ const twitterAuth = new TwitterStrategy({
 
 passport.use(twitterAuth);
 
-app.get('/auth/twitter', passport.authenticate('twitter'), function(req, res){
+app.get('/auth/twitter', passport.authenticate('twitter'),function(req, res){
   
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('Access-Control-Allow-Credentials', 'true')
@@ -109,21 +109,24 @@ app.get('/auth/twitter', passport.authenticate('twitter'), function(req, res){
 // axios.get('/auth/twitter', {withCredentials: true }, passport.authenticate('twitter'))
 
 app.use('/auth/twitter/callback', 
-passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    console.log("callback")
-    res.setHeader('Content-Type', 'application/json')
-    res.setHeader('Access-Control-Allow-Credentials', 'true')
-    res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
-    req.setHeader('Content-Type', 'application/json')
-    req.setHeader('Access-Control-Allow-Credentials', 'true')
-    req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
-    console.log("req headers in callback",req.headers)
-    console.log("response headers in callback",res.headers)
+passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),  function (req, res) {
+  // Successful authentication, redirect home.
+  console.log("callback")
+  res.setHeader('Content-Type', 'application/json')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  res.setHeader("cookie", req.headers.cookie)
+  res.cookie('cookie', req.headers.cookie)
+  // req.setHeader('Content-Type', 'application/json')
+  // req.setHeader('Access-Control-Allow-Credentials', 'true')
+  // req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  console.log("req headers in callback",req.headers)
+  console.log("response headers in callback",res)
 
-    res.redirect(SUCCESS_REDIRECT);
-  });
+  res.redirect(SUCCESS_REDIRECT)
+  
+
+})
 
   app.get("/getuser", (req, res) => {
     console.log("get user")
