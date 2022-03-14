@@ -107,8 +107,15 @@ const twitterAuth = new TwitterStrategy({
 passport.use(twitterAuth);
 
 app.get('/auth/twitter', passport.authenticate('twitter'), function(){
+  
   res.setHeader('Content-Type', 'application/json')
   res.setHeader('Access-Control-Allow-Credentials', 'true')
+  res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  req.setHeader('Content-Type', 'application/json')
+  req.setHeader('Access-Control-Allow-Credentials', 'true')
+  req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  console.log("req headers in first call",req.headers)
+  console.log("response headers in first call",res.headers)
 });
 
 // axios.get('/auth/twitter', {withCredentials: true }, passport.authenticate('twitter'))
@@ -121,6 +128,12 @@ passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),
     res.setHeader('Content-Type', 'application/json')
     res.setHeader('Access-Control-Allow-Credentials', 'true')
     res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+    req.setHeader('Content-Type', 'application/json')
+    req.setHeader('Access-Control-Allow-Credentials', 'true')
+    req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+    console.log("req headers in callback",req.headers)
+    console.log("response headers in callback",res.headers)
+
     res.redirect(SUCCESS_REDIRECT);
   });
 
