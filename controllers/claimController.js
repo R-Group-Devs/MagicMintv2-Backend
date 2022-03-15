@@ -17,9 +17,13 @@ const ipfs = create({host: 'ipfs.infura.io', port: '5001', protocol: 'https' });
 
 exports.getAllClaimsByUser = async (req, res) =>  {
 
+
     let campaignIDs  = await Campaign.find({})
 
+    let claims = null   
+    let newNFTs = []
     let ipfsData; 
+    console.log("test")
     campaignIDs = campaignIDs.map( campaign => campaign.twitterPostID)
 
     const config = {
@@ -52,16 +56,14 @@ exports.getAllClaimsByUser = async (req, res) =>  {
                             ipfsData = await ipfs.add(data)
                             let hm = true;
 
-                            let claims  = await ClaimNFT.find({}).where("owner").equals(req.params.user)
+                            claims  = await ClaimNFT.find({}).where("owner").equals(req.params.user)
 
                             claims.forEach(async (claim) => {
 
                                 if(claim.name == specificNFTMetadata[0].name && specificCampaign.campaignName == claim.campaign ){
                                     hm = false;
                                 }
-
                             })
-
                             if(hm){
                                 const claimNFT = new ClaimNFT({
                                     isMinted : false,
@@ -74,14 +76,10 @@ exports.getAllClaimsByUser = async (req, res) =>  {
                                 })
                     
                                 const saved = await claimNFT.save()
+                                newNFTs.push(saved)
     
                             }
                             
-
-                            if(claims){
-                                res.send(claims)
-                    
-                               }
 
                         }
                     }
@@ -93,11 +91,16 @@ exports.getAllClaimsByUser = async (req, res) =>  {
 
 
 
-
         }
 
     });
 
+    if(newNFTs.length >0){
+        console.log(claims,"claims")
+     res.send(newNFTs)
+    }else{
+     res.send("no NEW NFTS")
+    }
 
 
 }

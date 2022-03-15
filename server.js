@@ -40,9 +40,21 @@ connectDatabase()
 //middleware
 app.use(express.json());
 
-app.use(cors({ origin: FRONTEND_URL, 
+
+app.use(cors({ 
+    origin: [
+      FRONTEND_URL,
+      "https://magicmintv2.herokuapp.com",
+      "https://api.twitter.com"
+    ],
     credentials: true // allow session cookie from browser to pass through
 }));
+
+// app.use(function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   next();
+// });
 
 app.use(fileUpload());
 
@@ -56,7 +68,7 @@ app.use(
       resave: true,
       proxy: true,
       saveUninitialized: true,
-      // cookie: {sameSite: 'none', secure: true, proxy: true, maxAge: 1000 * 60 * 60 * 24 * 7 },
+      cookie: {sameSite: 'none', secure: true, proxy: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
 
   }));
   
