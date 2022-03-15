@@ -39,9 +39,11 @@ connectDatabase()
 
 //middleware
 app.use(express.json());
+
 app.use(cors({ origin: FRONTEND_URL, 
     credentials: true // allow session cookie from browser to pass through
 }));
+
 app.use(fileUpload());
 
 
@@ -69,7 +71,7 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser((user, done) => {
-  console.log("deserialize")
+  console.log("deserialize", user)
     return done(null, user)
 })
 const twitterAuth = new TwitterStrategy({
@@ -116,7 +118,9 @@ passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),  funct
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
   res.setHeader("cookie", req.headers.cookie)
-  res.cookie('cookie', req.headers.cookie)
+  // res.cookie('cookie', req.headers.cookie)
+  // req.session.cookie = req.headers.cookie
+  // req.cookies= req.headers.cookie
   // req.setHeader('Content-Type', 'application/json')
   // req.setHeader('Access-Control-Allow-Credentials', 'true')
   // req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
@@ -124,7 +128,6 @@ passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),  funct
   console.log("response headers in callback",res)
 
   res.redirect(SUCCESS_REDIRECT)
-  
 
 })
 
