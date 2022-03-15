@@ -130,6 +130,7 @@ passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),  funct
   res.setHeader('Access-Control-Allow-Credentials', 'true')
   res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
   res.setHeader("cookie", req.headers.cookie)
+  console.log("passport user in callback", req.session.passport.user)
   // res.cookie('cookie', req.headers.cookie)
   // req.session.cookie = req.headers.cookie
   // req.cookies= req.headers.cookie
@@ -139,6 +140,15 @@ passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),  funct
   console.log("req headers in callback",req.headers)
   console.log("response headers in callback",res)
 
+  // if a make it with query that contains a specific number anyone can do it
+  // i have to redirect with headers
+  // res.header()
+  res.set({
+  'Content-Type': 'application/json',
+   'Access-Control-Allow-Credentials': 'true',
+  "Access-Control-Allow-Origin": FRONTEND_URL,
+  "cookie": req.headers.cookie
+  })
   res.redirect(SUCCESS_REDIRECT)
 
 })
