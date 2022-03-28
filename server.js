@@ -61,9 +61,9 @@ app.set('trust proxy', 1)
 app.use(
     session({
       secret: "secretcode",
-      // resave: true,
+      resave: false,
       // proxy: true,
-      // saveUninitialized: true,
+      saveUninitialized: true,
       cookie: {secure: true}
       // cookie: {sameSite: 'none', secure: true, proxy: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
 
