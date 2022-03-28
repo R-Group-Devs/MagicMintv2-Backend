@@ -40,6 +40,7 @@ connectDatabase()
 //middleware
 app.use(express.json());
 
+app.use(fileUpload());
 
 app.use(cors({ 
     origin: [
@@ -52,9 +53,7 @@ app.use(cors({
 
 
 
-app.use(fileUpload());
-
-
+app.use(passport.initialize())
 
 app.set('trust proxy', 1)
 
@@ -72,11 +71,10 @@ app.use(
 
   }));
   
+  app.use(passport.session());
 
 
-app.use(passport.initialize())
 
-app.use(passport.authenticate('session'));
 
 
 passport.serializeUser((user, done) => {
