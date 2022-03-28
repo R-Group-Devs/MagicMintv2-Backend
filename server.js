@@ -64,7 +64,7 @@ app.use(
       resave: true,
       proxy: true,
       saveUninitialized: true,
-      cookie: {sameSite: 'none', secure: true, proxy: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
+      // cookie: {sameSite: 'none', secure: true, proxy: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
 
   }));
   
@@ -84,6 +84,7 @@ passport.deserializeUser((user, done) => {
   console.log("deserialize", user)
     return done(null, user)
 })
+
 const twitterAuth = new TwitterStrategy({
     consumerKey: TWITTER_CONSUMER_KEY,
     consumerSecret: TWITTER_CONSUMER_SECRET,
