@@ -65,18 +65,19 @@ app.use(
       resave: true,
       proxy: true,
       saveUninitialized: true,
-      cookie: { secure: true, proxy: true, sameSite:'none', maxAge: 1000 * 60 * 60 * 24 * 7 },
+      cookie: { secure: true, proxy: true, httpOnly:false, maxAge: 1000 * 60 * 60 * 24 * 7 },
 
   }));
   
 
 
 app.use(passport.initialize())
-app.use(passport.session())
+
+app.use(passport.authenticate('session'));
 
 
 passport.serializeUser((user, done) => {
-    console.log("serialize")
+    console.log("serialize") 
     console.log(user)
     console.log(user.id)
     return done(null, user.id)
