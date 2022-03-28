@@ -61,12 +61,15 @@ app.set('trust proxy', 1)
 app.use(
     session({
       secret: "secretcode",
-      resave: true,
-      proxy: true,
-      saveUninitialized: true,
+      // resave: true,
+      // proxy: true,
+      // saveUninitialized: true,
+      secure: true
       // cookie: {sameSite: 'none', secure: true, proxy: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
 
   }));
+app.use(require('cookie-parser'));
+
   
 
 app.use(passport.initialize())
