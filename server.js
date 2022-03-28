@@ -1,3 +1,4 @@
+
 const express  = require('express');
 const mongoose = require('mongoose');
 const { MongoDB_URI } = require('./config')
@@ -11,7 +12,7 @@ let claim = require('./routes/claim')
 let oauth = require('./routes/oauth'); 
 const fileUpload = require('express-fileupload');
 
-let User = require('./models/User')
+let User = require('./models/User');
 
 
 const TWITTER_CONSUMER_KEY = process.env.CONSUMER_KEY;
@@ -38,15 +39,21 @@ connectDatabase()
 
 //middleware
 app.use(express.json());
+
+
 app.use(cors({ 
     origin: [
       FRONTEND_URL,
+      "https://magicmintv2.herokuapp.com",
       "https://api.twitter.com"
     ],
-
     credentials: true // allow session cookie from browser to pass through
 }));
+
+
+
 app.use(fileUpload());
+
 
 
 app.set('trust proxy', 1)
@@ -57,7 +64,7 @@ app.use(
       resave: true,
       proxy: true,
       saveUninitialized: true,
-      // cookie: {sameSite: 'none', secure: true, proxy: true, maxAge: 1000 * 60 * 60 * 24 * 7 },
+      // cookie: {sameSite: 'none', secure: true, proxy: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
 
   }));
   
@@ -67,10 +74,12 @@ app.use(passport.session())
 
 
 passport.serializeUser((user, done) => {
+    console.log("serialize")
     return done(null, user)
 })
 
 passport.deserializeUser((user, done) => {
+  console.log("deserialize", user)
     return done(null, user)
 })
 const twitterAuth = new TwitterStrategy({
@@ -95,15 +104,50 @@ const twitterAuth = new TwitterStrategy({
 
 passport.use(twitterAuth);
 
-app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter', passport.authenticate('twitter'),function(req, res){
+  
+  // res.setHeader('Content-Type', 'application/json')
+  // res.setHeader('Access-Control-Allow-Credentials', 'true')
+  // res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  // req.setHeader('Content-Type', 'application/json')
+  // req.setHeader('Access-Control-Allow-Credentials', 'true')
+  // req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  // console.log("req headers in first call",req.headers)
+  // console.log("response headers in first call",res.headers)
+});
+
+// axios.get('/auth/twitter', {withCredentials: true }, passport.authenticate('twitter'))
 
 app.use('/auth/twitter/callback', 
-passport.authenticate('twitter', { successRedirect: SUCCESS_REDIRECT, failureRedirect: FAILURE_REDIRECT }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    console.log("callback")
-    res.redirect('/');
-  });
+passport.authenticate('twitter', {  failureRedirect: FAILURE_REDIRECT }),  function (req, res) {
+  // Successful authentication, redirect home.
+  console.log("callback")
+  // res.setHeader('Content-Type', 'application/json')
+  // res.setHeader('Access-Control-Allow-Credentials', 'true')
+  // res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  // res.setHeader("cookie", req.headers.cookie)
+  // console.log("passport user in callback", req.session.passport.user)
+  // res.cookie('cookie', req.headers.cookie)
+  // req.session.cookie = req.headers.cookie
+  // req.cookies= req.headers.cookie
+  // req.setHeader('Content-Type', 'application/json')
+  // req.setHeader('Access-Control-Allow-Credentials', 'true')
+  // req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
+  // console.log("req headers in callback",req.headers)
+  // console.log("response headers in callback",res)
+
+  // if a make it with query that contains a specific number anyone can do it
+  // i have to redirect with headers
+  // res.header()
+  // res.set({
+  // 'Content-Type': 'application/json',
+  //  'Access-Control-Allow-Credentials': 'true',
+  // "Access-Control-Allow-Origin": FRONTEND_URL,
+  // "cookie": req.headers.cookie
+  // })
+  res.redirect(SUCCESS_REDIRECT)
+
+})
 
   app.get("/getuser", (req, res) => {
     console.log("get user")

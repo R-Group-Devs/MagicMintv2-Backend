@@ -44,18 +44,6 @@ exports.requestToken = async (req, res) =>  {
 
     const test= await getOAuthRequestToken();
 
-    // const {oauth_token, oauth_token_secret} = await getOAuthRequestToken();
-  
-    // res.cookie(COOKIE_NAME, oauth_token , {
-    //   maxAge: 15 * 60 * 1000, // 15 minutes
-    //   secure: true,
-    //   httpOnly: true,
-    //   sameSite: true,
-    // });
-    
-    // tokens[oauth_token] = { oauth_token_secret };
-    // res.json({ oauth_token });
-    
   };
 
 exports.accessToken = async (req, res) =>  {
