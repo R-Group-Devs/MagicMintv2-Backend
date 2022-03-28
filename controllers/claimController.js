@@ -88,18 +88,14 @@ exports.getAllClaimsByUser = async (req, res) =>  {
 
                }
            })
-
-
-
         }
-
     });
 
     if(newNFTs.length >0){
         console.log(claims,"claims")
-     res.send(newNFTs)
+        res.send(newNFTs)
     }else{
-     res.send("no NEW NFTS")
+     res.send("none")
     }
 
 
