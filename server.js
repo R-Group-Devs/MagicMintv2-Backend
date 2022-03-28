@@ -58,19 +58,18 @@ app.use(fileUpload());
 
 app.set('trust proxy', 1)
 
+
 app.use(
     session({
       secret: "secretcode",
-      resave: false,
-      // proxy: true,
+      resave: true,
+      proxy: true,
       saveUninitialized: true,
-      cookie: {secure: true}
-      // cookie: {sameSite: 'none', secure: true, proxy: false, maxAge: 1000 * 60 * 60 * 24 * 7 },
+      cookie: { secure: true, proxy: true, sameSite:'none', maxAge: 1000 * 60 * 60 * 24 * 7 },
 
   }));
-app.use(require('cookie-parser'));
-
   
+
 
 app.use(passport.initialize())
 app.use(passport.session())
