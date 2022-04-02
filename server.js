@@ -63,13 +63,14 @@ app.use(
       secret: "secretcode",
       resave: true,
       // proxy: undefined,
+      
       saveUninitialized: true,
-      cookie: {
-         secure: true,
-          sameSite:"none",
-          maxAge: 1000 * 60 * 60 * 24 * 7 },
-
-  }));
+  //     cookie: {
+  //         secure: false,
+  //         sameSite:"none",
+  //         maxAge: 1000 * 60 * 60 * 24 * 7 },
+  }
+  ));
   
   app.use(passport.session());
 
@@ -81,7 +82,7 @@ passport.serializeUser((user, done) => {
     console.log("serialize") 
     console.log(user)
     console.log(user.id)
-    return done(null, user.id)
+    return done(null, user)
 })
 
 passport.deserializeUser((user, done) => {
