@@ -1,14 +1,12 @@
-mongoose = require('mongoose')
+mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+campaignNFT = new Schema({
+  creator: String, // creator twitter handle
+  name: String,
+  description: String,
+  file: String,
+  isMinted: Boolean,
+});
 
-campaignNFT = new Schema ({
-    creator: String, // creator twitter handle
-    name: String,
-    description: String,
-    file: String,
-    isMinted: Boolean
-})
-
-
-module.exports = mongoose.model('campaignNFT', campaignNFT)
+module.exports = mongoose.model("campaignNFT", campaignNFT);
