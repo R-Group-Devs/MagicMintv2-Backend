@@ -116,6 +116,10 @@ app.get('/api', (req, res) => {
   res.send('Welcome to the Magic Mint API');
 });
 
+app.get('/test', (req, res) => {
+  res.send('Deploy went well!');
+});
+
 app.get('/', (req, res) => {
   res.send('Welcome to the Magic Mint API');
 });
