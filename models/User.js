@@ -1,4 +1,4 @@
-mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 user = new Schema({
@@ -10,8 +10,9 @@ user = new Schema({
     type: Array,
     default: [],
   },
-  profileCreated: Date,
+  twitterPhoto: String,
+  profileCreated: Date, // {type: Date, default: Date.now()}
   endDate: Date,
 });
 
-module.exports = mongoose.model("user", user);
+module.exports = mongoose.model('user', user);
