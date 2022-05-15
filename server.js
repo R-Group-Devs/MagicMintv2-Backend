@@ -1,23 +1,19 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const { MongoDB_URI } = require("./config");
-const cors = require("cors");
-const session = require("express-session");
-const passport = require("passport");
-const TwitterStrategy = require("passport-twitter").Strategy;
-let campaign = require("./routes/campaign");
-let user = require("./routes/user");
-let claim = require("./routes/claim");
-const fileUpload = require("express-fileupload");
+const express = require('express');
+const mongoose = require('mongoose');
+const { MongoDB_URI } = require('./config');
+const cors = require('cors');
+// const session = require('express-session');
+const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
+const passport = require('passport');
+let campaign = require('./routes/campaign');
+let user = require('./routes/user');
+let claim = require('./routes/claim');
+const fileUpload = require('express-fileupload');
 
-let CloudAddress = require("./models/CloudAddress");
+let CloudAddress = require('./models/CloudAddress');
 
-let User = require("./models/User");
-
-const TWITTER_CONSUMER_KEY = process.env.CONSUMER_KEY;
-const TWITTER_CONSUMER_SECRET = process.env.CONSUMER_SECRET;
 const FRONTEND_URL = process.env.FRONTEND_URL;
-const CALLBACK_URL = process.env.CALLBACK_URL;
 const SUCCESS_REDIRECT = process.env.SUCCESS_REDIRECT;
 const FAILURE_REDIRECT = process.env.FAILURE_REDIRECT;
 
@@ -27,11 +23,13 @@ const app = express();
 //database connection
 async function connectDatabase() {
   dbConnected = await mongoose.connect(process.env.MongoDB_URI);
-  app.use("/api", campaign);
-  app.use("/api", user);
-  app.use("/api", claim);
-  console.log("Connected to mongoose successfully");
+  app.use('/api', campaign);
+  app.use('/api', user);
+  app.use('/api', claim);
+  console.log('Connected to mongoose successfully');
 }
+
+require('./passport-js/twitter');
 
 connectDatabase();
 
@@ -40,132 +38,84 @@ app.use(express.json());
 
 app.use(fileUpload());
 
+app.set('trust proxy', 1);
+
+const additionalProdCookieSettings = {};
+
+if (process.env.NODE_ENV === 'prod') {
+  additionalProdCookieSettings.sameSite = 'none';
+}
+
+app.use(
+  cookieSession({
+    name: 'session',
+    keys: ['key1', 'key2'],
+    maxAge: 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === 'prod',
+    ...additionalProdCookieSettings,
+  })
+);
+app.use(cookieParser());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(
   cors({
     origin: [
       FRONTEND_URL,
-      "https://magicmintv2.herokuapp.com",
-      "https://api.twitter.com",
-      "https://magicmint.xyz",
+      'https://magicmintv2.herokuapp.com',
+      'https://api.twitter.com',
+      'https://magicmint.xyz',
     ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // allow session cookie from browser to pass through
   })
 );
 
-app.use(passport.initialize());
+app.get('/getuser', (req, res) => {
+  if (req.user) {
+    return res.json({
+      success: true,
+      message: 'user has successfully authenticated',
+      user: req.user,
+      cookies: req.cookies,
+    });
+  }
+  res.status(401).json({
+    authenticated: false,
+    message: 'user has not been authenticated',
+  });
+});
 
-app.set("trust proxy", 1);
+// when login failed, send failed msg
+app.get('/auth/login/failed', (req, res) => {
+  res.redirect(FAILURE_REDIRECT);
+});
 
-app.use(
-  session({
-    secret: "secretcode",
-    resave: true,
-    // proxy: undefined,
-    saveUninitialized: true,
-    //     cookie: {
-    //         secure: false,
-    //         sameSite:"none",
-    //         maxAge: 1000 * 60 * 60 * 24 * 7 },
+app.get('/auth/twitter', passport.authenticate('twitter'));
+
+app.get(
+  '/auth/twitter/callback',
+  passport.authenticate('twitter', {
+    successRedirect: SUCCESS_REDIRECT,
+    failureRedirect: '/auth/login/failed',
   })
 );
 
-app.use(passport.session());
-
-passport.serializeUser((user, done) => {
-  console.log("serialize");
-  console.log(user);
-  console.log(user.id);
-  return done(null, user);
-});
-
-//this function isn't being hit on the cloud
-passport.deserializeUser((user, done) => {
-  console.log("deserialize", user);
-  return done(null, user);
-});
-
-const twitterAuth = new TwitterStrategy(
-  {
-    consumerKey: TWITTER_CONSUMER_KEY,
-    consumerSecret: TWITTER_CONSUMER_SECRET,
-    callbackURL: CALLBACK_URL,
-  },
-  async (req, accessToken, refreshToken, profile, cb) => {
-    user = await User.findOne({ username: profile.username });
-
-    if (user == undefined) {
-      newUser = new User({
-        username: profile.username,
-        twitterId: profile.id,
-        profileCreated: new Date(),
-      });
-      const saved = await newUser.save();
-    }
-    return cb(null, profile);
-  }
-);
-
-passport.use(twitterAuth);
-
-app.get("/auth/twitter", passport.authenticate("twitter"), function (req, res) {
-  // res.setHeader('Content-Type', 'application/json')
-  // res.setHeader('Access-Control-Allow-Credentials', 'true')
-  // res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
-  // req.setHeader('Content-Type', 'application/json')
-  // req.setHeader('Access-Control-Allow-Credentials', 'true')
-  // req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
-  // console.log("req headers in first call",req.headers)
-  // console.log("response headers in first call",res.headers)
-});
-
-// axios.get('/auth/twitter', {withCredentials: true }, passport.authenticate('twitter'))
-
-app.use(
-  "/auth/twitter/callback",
-  passport.authenticate("twitter", { failureRedirect: FAILURE_REDIRECT }),
-  function (req, res) {
-    // Successful authentication, redirect home.
-    console.log("callback");
-    // res.setHeader('Content-Type', 'application/json')
-    // res.setHeader('Access-Control-Allow-Credentials', 'true')
-    // res.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
-    // res.setHeader("cookie", req.headers.cookie)
-    // console.log("passport user in callback", req.session.passport.user)
-    // res.cookie('cookie', req.headers.cookie)
-    // req.session.cookie = req.headers.cookie
-    // req.cookies= req.headers.cookie
-    // req.setHeader('Content-Type', 'application/json')
-    // req.setHeader('Access-Control-Allow-Credentials', 'true')
-    // req.setHeader("Access-Control-Allow-Origin" , FRONTEND_URL)
-    // console.log("req headers in callback",req.headers)
-    // console.log("response headers in callback",res)
-
-    // if a make it with query that contains a specific number anyone can do it
-    // i have to redirect with headers
-    // res.header()
-    // res.set({
-    // 'Content-Type': 'application/json',
-    //  'Access-Control-Allow-Credentials': 'true',
-    // "Access-Control-Allow-Origin": FRONTEND_URL,
-    // "cookie": req.headers.cookie
-    // })
-    res.redirect(SUCCESS_REDIRECT);
-  }
-);
-
-app.get("/getuser", (req, res) => {
-  console.log("get user", req.user);
-  res.send(req.user);
-});
+// app.get('/getuser', (req, res) => {
+//   console.log('get user', req.user);
+//   res.send(req.user);
+// });
 
 app.listen(PORT, () => {
-  console.log(`listening on : http://localhost:${PORT}`);
+  console.log(`listening on : https://localhost:${PORT}`);
 });
 
-app.get("/api", (req, res) => {
-  res.send("Welcome to the Magic Mint API");
+app.get('/api', (req, res) => {
+  res.send('Welcome to the Magic Mint API');
 });
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Magic Mint API");
+app.get('/', (req, res) => {
+  res.send('Welcome to the Magic Mint API');
 });
