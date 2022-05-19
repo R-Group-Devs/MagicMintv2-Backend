@@ -35,6 +35,7 @@ exports.createCampaign = async (req, res) => {
 exports.uploadNFTFile = async (req, res) => {};
 
 exports.createNFT = async (req, res) => {
+  console.log(req.files.file);
   if (req.files.file) {
     const fileName =
       "nft-upload-" +

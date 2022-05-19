@@ -1,7 +1,7 @@
 mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-ClaimNFT = new Schema({
+const claimNFT = new Schema({
   isMinted: Boolean,
   name: String,
   description: String,
@@ -11,4 +11,4 @@ ClaimNFT = new Schema({
   campaignMintNumber: Number,
 });
 
-module.exports = mongoose.model("ClaimNFT", ClaimNFT);
+module.exports = mongoose.model("ClaimNFT", claimNFT);

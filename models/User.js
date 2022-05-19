@@ -1,18 +1,32 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-user = new Schema({
-  username: String,
-  TwitterId: String,
-  CampaignId: String,
-  createdNFT: {
-    // the ID of the createdNFTs
-    type: Array,
-    default: [],
+const user = new Schema({
+  createdNFT: [
+    {
+      id: Schema.Types.ObjectId,
+      ref: "campaignNFT",
+    },
+  ],
+  twitterProvider: {
+    id: {
+      required: true,
+      unique: true,
+      type: String,
+    },
+    username: {
+      required: true,
+      unique: true,
+      type: String,
+    },
+    photo: {
+      type: String,
+    },
   },
-  twitterPhoto: String,
-  profileCreated: Date, // {type: Date, default: Date.now()}
-  endDate: Date,
+  profileCreated: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
-module.exports = mongoose.model('user', user);
+module.exports = mongoose.model("user", user);
