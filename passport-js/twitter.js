@@ -3,11 +3,9 @@ const TwitterStrategy = require('passport-twitter').Strategy;
 const User = require('../models/User');
 
 passport.serializeUser(function (user, done) {
-  console.log('SERIALIZE USER', user);
   done(null, user.TwitterId);
 });
 passport.deserializeUser((twitterId, done) => {
-  console.log('DESERIALIZE USER', twitterId);
   User.findOne({ TwitterId: twitterId })
     .then((user) => {
       done(null, user);
@@ -26,7 +24,6 @@ passport.use(
     },
     async (token, refreshToken, profile, done) => {
       const user = await User.findOne({ TwitterId: profile.id });
-      console.log('PROFILE', profile);
       if (!user) {
         const newUser = new User({
           username: profile.username,
