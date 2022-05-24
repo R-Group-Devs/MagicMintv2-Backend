@@ -116,7 +116,7 @@ exports.getClaims = async (req, res) => {
     .equals(req.params.user)
     .where("isMinted")
     .equals(false);
-  res.send(claims);
+  res.status(claims);
 };
 
 exports.getClaimedNFTs = async (req, res) => {

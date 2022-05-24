@@ -6,17 +6,22 @@ const { Schema } = mongoose;
 campaign = new Schema({
   campaignNFTID: {
     // nft id in database
-    type: String,
-    default: "",
+    type: {
+      id: Schema.Types.ObjectId,
+      ref: "campaignNFT",
+    },
+    required: true,
   },
   campaignBase: String,
-  creatorTwitterHandle: {
-    type: String,
-    default: "",
+  creator: {
+    type: {
+      id: Schema.Types.ObjectId,
+      ref: "user",
+    },
   },
   twitterPostID: {
     type: String,
-    default: "",
+    required: true,
   },
   likes: {
     // array of handles that liked
@@ -28,29 +33,22 @@ campaign = new Schema({
     type: Array,
     default: [],
   },
-  countOldLikes: {
-    type: Number,
-    default: 0,
-  },
-  countOldReshares: {
-    type: Number,
-    default: 0,
-  },
   nftCopies: {
     type: Number,
-    default: 0,
+    required: true,
   },
   collectionAddress: {
     type: String,
     default: "",
+    required: true,
   },
   includeLikesBeforeCreation: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   includeResharesBeforeCreation: {
     type: Boolean,
-    default: false,
+    default: true,
   },
   campaignName: {
     type: String,
