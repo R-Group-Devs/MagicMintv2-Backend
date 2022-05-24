@@ -11,7 +11,8 @@ let user = require("./routes/user");
 let claim = require("./routes/claim");
 const fileUpload = require("express-fileupload");
 
-let CloudAddress = require("./models/CloudAddress");
+let CloudAddress = require('./models/CloudAddress');
+const { default: axios } = require('axios');
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const SUCCESS_REDIRECT = process.env.SUCCESS_REDIRECT;
@@ -102,6 +103,45 @@ app.get(
     failureRedirect: "/auth/login/failed",
   })
 );
+
+const oembedUrl =
+  'https://publish.twitter.com/oembed?omit_script=true&hide_thread=true&url=';
+const tweetsByIdUrl = 'https://twitter.com/andypiper/status/';
+
+app.get('/getMyTweets', async (req, res) => {
+  if(!req.user)
+  return res.json([]);
+  try {
+    const tweetsResponse = await axios.get(
+      `https://api.twitter.com/2/users/${req.user.TwitterId}/tweets?exclude=retweets,replies`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.BEARER_TOKEN}`,
+        },
+      }
+    );
+    const tweetsIds = tweetsResponse.data.data.map(tweet => tweet.id);
+
+    const embedsPromises = tweetsIds.map(
+      (tweetId) =>
+        new Promise((resolve, reject) => {
+          axios
+            .get(oembedUrl + tweetsByIdUrl + tweetId)
+            .then((data) => resolve(data))
+            .catch((err) => reject(err));
+        })
+    );
+    const embedsResponses = await Promise.all(embedsPromises);
+      const responseObj = tweetsIds.map((tweetId, ind) => ({
+        id: tweetId,
+        html: embedsResponses[ind].data.html,
+        url: embedsResponses[ind].data.url,
+      }));
+    res.json(responseObj);
+  } catch (err) {
+    res.json(err);
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`listening on : https://localhost:${PORT}`);
