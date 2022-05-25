@@ -6,7 +6,8 @@ router.get('/campaign/allCampaigns', campaignController.getAllCampaigns);
 
 router.get('/campaign/myCampaigns', campaignController.getAllMyCampaigns);
 
-router.get('/campaign/:id', campaignController.getCampaignById);
+router.get('/campaign/getById/:id', campaignController.getCampaignById);
+
 
 router.get('/campaign/getNFTPrototype', campaignController.getNFTPrototypeCreatedByUser);
 
