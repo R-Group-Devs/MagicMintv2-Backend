@@ -25,7 +25,7 @@ const user = new Schema({
   },
   profileCreated: {
     type: Date,
-    default: Date.now(),
+    default: new Date(),
   },
 });
 

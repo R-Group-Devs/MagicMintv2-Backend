@@ -51,7 +51,7 @@ campaign = new Schema({
   },
   startDate: {
     type: Date,
-    default: Date.now,
+    default: new Date(),
   },
   endDate: Date,
 });
