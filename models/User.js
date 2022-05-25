@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const user = new Schema({
   createdNFT: [
     {
-      id: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "campaignNFT",
     },
   ],
