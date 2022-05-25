@@ -6,18 +6,15 @@ const { Schema } = mongoose;
 campaign = new Schema({
   campaignNFTID: {
     // nft id in database
-    type: {
-      id: Schema.Types.ObjectId,
-      ref: "campaignNFT",
-    },
+    type: Schema.Types.ObjectId,
+    ref: "campaignNFT",
+
     required: true,
   },
   campaignBase: String,
   creator: {
-    type: {
-      id: Schema.Types.ObjectId,
-      ref: "user",
-    },
+    type: Schema.Types.ObjectId,
+    ref: "user",
   },
   twitterPostID: {
     type: String,

@@ -1,12 +1,10 @@
-mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const campaignNFT = new Schema({
   creator: {
-    type: {
-      id: Schema.Types.ObjectId,
-      ref: "user",
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
     required: true,
   },
   name: {

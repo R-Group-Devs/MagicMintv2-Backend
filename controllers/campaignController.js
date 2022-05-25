@@ -35,7 +35,6 @@ exports.createCampaign = async (req, res) => {
 exports.uploadNFTFile = async (req, res) => {};
 
 exports.createNFT = async (req, res) => {
-  console.log(req.files.file);
   if (req.files.file) {
     const fileName =
       "nft-upload-" +
@@ -47,12 +46,16 @@ exports.createNFT = async (req, res) => {
       "../public/assets/upload/NFTPrototype" + fileName
     );
 
+    const userCreate = await User.findOne({})
+      .where("username")
+      .equals(req.body.creator);
+
+    console.log("test", userCreate);
     campaignNFT = new CampaignNFT({
-      creator: req.body.creator, // creator twitter handle
+      creator: userCreate._id, // creator twitter handle
       name: req.body.name,
       description: req.body.description,
       file: fileName,
-      isMinted: false,
     });
     await req.files.file.mv(filePathNameNew);
 

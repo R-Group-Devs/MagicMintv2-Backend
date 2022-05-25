@@ -13,8 +13,6 @@ const ipfs = create({
   protocol: "https",
 });
 
-// const ipfs = ipfsAPI({host: 'ipfs.infura.io', port: '5001', protocol: 'https' });
-
 exports.getAllClaimsByUser = async (req, res) => {
   let campaignIDs = await Campaign.find({});
 
