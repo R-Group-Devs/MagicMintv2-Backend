@@ -106,13 +106,13 @@ app.get('/getMyTweets', async (req, res) => {
   if (!req.user) return res.json([]);
   try {
     const tweetsResponse = await axios.get(
-      `https://api.twitter.com/2/users/${req.user.TwitterId}/tweets?exclude=retweets,replies`,
+      `https://api.twitter.com/2/users/${req.user.twitterProvider.id}/tweets?exclude=retweets,replies`,
       {
         headers: {
           Authorization: `Bearer ${process.env.BEARER_TOKEN}`,
         },
       }
-    );
+      );
     const tweetsIds = tweetsResponse.data.data.map((tweet) => tweet.id);
 
     const embedsPromises = tweetsIds.map(

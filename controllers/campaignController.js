@@ -47,8 +47,8 @@ exports.createNFT = async (req, res) => {
       "../public/assets/upload/NFTPrototype" + fileName
     );
 
-    campaignNFT = new CampaignNFT({
-      creator: req.body.creator, // creator twitter handle
+    const campaignNFT = new CampaignNFT({
+      creator: req.user._id,
       name: req.body.name,
       description: req.body.description,
       file: fileName,
@@ -65,7 +65,7 @@ exports.createNFT = async (req, res) => {
 };
 
 exports.getNFTPrototypeCreatedByUser = async (req, res) => {
-  const NFTPrototypes = await CampaignNFT.find({ creator: req.params.handle });
+  const NFTPrototypes = await CampaignNFT.find({ creator: req.user._id });
 
   if (NFTPrototypes) {
     res.send(NFTPrototypes);
