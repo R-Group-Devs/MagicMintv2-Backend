@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const user = new Schema({
   createdNFT: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "campaignNFT",
+      type: Schema.Types.ObjectId,
+      ref: 'campaignNFT',
     },
   ],
   twitterProvider: {
@@ -29,4 +29,4 @@ const user = new Schema({
   },
 });
 
-module.exports = mongoose.model("user", user);
+module.exports = mongoose.model('user', user);

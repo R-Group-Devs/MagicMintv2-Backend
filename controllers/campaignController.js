@@ -1,9 +1,9 @@
-let Campaign = require("../models/Campaign");
-let CampaignNFT = require("../models/CampaignNFT");
-let User = require("../models/User");
-const fs = require("fs");
-const fileUpload = require("express-fileupload");
-const path = require("path");
+let Campaign = require('../models/Campaign');
+let CampaignNFT = require('../models/CampaignNFT');
+let User = require('../models/User');
+const fs = require('fs');
+const fileUpload = require('express-fileupload');
+const path = require('path');
 
 exports.createCampaign = async (req, res) => {
   const campaign = req.body;
@@ -36,21 +36,12 @@ exports.uploadNFTFile = async (req, res) => {};
 
 exports.createNFT = async (req, res) => {
   if (req.files.file) {
-    const fileName =
-      "nft-upload-" +
-      Math.floor(Math.random() * 100000) +
-      "." +
-      req.files.file.name.split(".").pop();
-    const filePathNameNew = path.join(
-      __dirname,
-      "../public/assets/upload/NFTPrototype" + fileName
-    );
+    const fileName = 'nft-upload-' + Math.floor(Math.random() * 100000) + '.' + req.files.file.name.split('.').pop();
+    const filePathNameNew = path.join(__dirname, '../public/assets/upload/NFTPrototype' + fileName);
 
-    const userCreate = await User.findOne({})
-      .where("username")
-      .equals(req.body.creator);
+    const userCreate = await User.findOne({}).where('username').equals(req.body.creator);
 
-    console.log("test", userCreate);
+    console.log('test', userCreate);
     campaignNFT = new CampaignNFT({
       creator: userCreate._id, // creator twitter handle
       name: req.body.name,
@@ -62,18 +53,18 @@ exports.createNFT = async (req, res) => {
     const saved = await campaignNFT.save();
 
     if (saved) {
-      res.send("OK");
+      res.send('OK');
     }
   }
 };
 
 exports.getNFTPrototypeCreatedByUser = async (req, res) => {
-  const NFTPrototypes = await CampaignNFT.find({ creator: req.params.handle });
+  const NFTPrototypes = await CampaignNFT.find({ creator: req.user._id });
 
   if (NFTPrototypes) {
     res.send(NFTPrototypes);
   } else {
-    res.send("Not able to fetch or there are not any");
+    res.send('Not able to fetch or there are not any');
   }
 };
 
@@ -89,7 +80,7 @@ exports.getAllCampaignsByUser = async (req, res) => {
   if (campaigns) {
     res.send(campaigns);
   } else {
-    res.send("error finding campaigns");
+    res.send('error finding campaigns');
   }
 };
 exports.getAllCampaigns = async (req, res) => {
@@ -98,6 +89,6 @@ exports.getAllCampaigns = async (req, res) => {
   if (campaigns) {
     res.send(campaigns);
   } else {
-    res.send("error finding campaigns");
+    res.send('error finding campaigns');
   }
 };

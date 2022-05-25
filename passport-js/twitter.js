@@ -3,12 +3,10 @@ const TwitterStrategy = require('passport-twitter').Strategy;
 const User = require('../models/User');
 
 passport.serializeUser(function (user, done) {
-  console.log('SERIALIZE USER', user);
-  done(null, user.TwitterId);
+  done(null, user.twitterProvider.id);
 });
 passport.deserializeUser((twitterId, done) => {
-  console.log('DESERIALIZE USER', twitterId);
-  User.findOne({ TwitterId: twitterId })
+  User.findOne({ 'twitterProvider.id': twitterId})
     .then((user) => {
       done(null, user);
     })
@@ -25,22 +23,17 @@ passport.use(
       callbackURL: process.env.CALLBACK_URL,
     },
     async (token, refreshToken, profile, done) => {
-      const user = await User.findOne({ TwitterId: profile.id });
-      console.log('PROFILE', profile);
+      const user = await User.findOne({ 'twitterProvider.id': profile.id });
       if (!user) {
         const newUser = new User({
-          username: profile.username,
-          TwitterId: profile.id,
-          twitterPhoto: profile.photos[0].value ?? null,
-          profileCreated: new Date(), // this shouldn't be set here, set it in the model
+          twitterProvider: {
+            id: profile.id,
+            username: profile.username,
+            photo: profile.photos[0].value ?? null,
+          },
         });
         await newUser.save();
         return done(null, newUser);
-      }
-      if (!user.twitterPhoto) {
-        // just for now - this check and its body will be deleted after db reset
-        user.twitterPhoto = profile.photos[0].value ?? null;
-        await user.save();
       }
       return done(null, user);
     }
